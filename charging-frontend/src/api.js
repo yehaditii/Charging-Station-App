@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://charging-station-app-jxxz.onrender.com',
+  baseURL: 'https://charging-station-app-jxxz.onrender.com/api',
 })
 
 // Automatically attach token to every request
