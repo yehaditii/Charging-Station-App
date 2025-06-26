@@ -8,7 +8,7 @@
       <p><strong>Connector:</strong> {{ station.connectorType }}</p>
       <p><strong>Latitude:</strong> {{ station.location.latitude }}</p>
       <p><strong>Longitude:</strong> {{ station.location.longitude }}</p>
-      <router-link :to="/edit/${station._id}" class="btn mt-4 inline-block">✏ Edit</router-link>
+      <router-link :to="`/edit/${station._id}`" class="btn mt-4 inline-block">✏ Edit</router-link>
     </div>
   </div>
 </template>
@@ -18,11 +18,13 @@ import { ref, onMounted } from 'vue'
 import api from '../api'
 import { useRoute } from 'vue-router'
 
-const station = ref({})
+const station = ref({
+  location: { latitude: '', longitude: '' }
+})
 const route = useRoute()
 
 onMounted(async () => {
-  const res = await api.get(/stations/${route.params.id})
+  const res = await api.get(`/stations/${route.params.id}`)
   station.value = res.data
 })
 </script>
