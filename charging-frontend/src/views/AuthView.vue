@@ -29,17 +29,20 @@ const submitForm = async () => {
 </script>
 
 <template>
-  <div class="auth-container">
-    <h2>{{ isLogin ? 'Login' : 'Register' }}</h2>
-    <form @submit.prevent="submitForm">
-      <input v-model="email" type="email" placeholder="Email" required />
-      <input v-model="password" type="password" placeholder="Password" required />
-      <button type="submit">{{ isLogin ? 'Login' : 'Register' }}</button>
-    </form>
-    <p @click="isLogin = !isLogin" style="cursor:pointer; color:blue">
-      {{ isLogin ? 'No account? Register' : 'Already have an account? Login' }}
-    </p>
-    <p v-if="message">{{ message }}</p>
+  <div>
+    <Navbar /> <!-- ⬅️ Add this -->
+    <div class="auth-container">
+      <h2>{{ isLogin ? 'Login' : 'Register' }}</h2>
+      <form @submit.prevent="submitForm">
+        <input v-model="email" type="email" placeholder="Email" required />
+        <input v-model="password" type="password" placeholder="Password" required />
+        <button type="submit">{{ isLogin ? 'Login' : 'Register' }}</button>
+      </form>
+      <p @click="isLogin = !isLogin" style="cursor:pointer; color:blue">
+        {{ isLogin ? 'No account? Register' : 'Already have an account? Login' }}
+      </p>
+      <p v-if="message">{{ message }}</p>
+    </div>
   </div>
 </template>
 
