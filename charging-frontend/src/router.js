@@ -7,7 +7,7 @@ import StationList from './views/StationList.vue'
 import AddStation from './views/AddStation.vue'
 import EditStation from './views/EditStation.vue'
 import StationDetails from './views/StationDetails.vue'
-import MapView from './views/MapView.vue' // moved to views for consistency
+import MapView from './views/MapView.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -16,15 +16,15 @@ const routes = [
   { path: '/add', component: AddStation },
   { path: '/edit/:id', component: EditStation, props: true },
   { path: '/stations/:id', component: StationDetails, props: true },
-  { path: '/map', component: MapView },
+  { path: '/map', component: MapView }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 })
 
-// ✅ Protect routes if not logged in
+// 🛡️ Protect all routes except login
 router.beforeEach((to, from, next) => {
   const publicPages = ['/login']
   const authRequired = !publicPages.includes(to.path)
@@ -33,4 +33,7 @@ router.beforeEach((to, from, next) => {
   if (authRequired && !token) {
     return next('/login')
   }
-  next
+  next()
+})
+
+export default router
