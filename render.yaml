@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: charging-backend
+    env: node
+    plan: free
+    buildCommand: cd charging-backend && npm install
+    startCommand: cd charging-backend && node server.js
+    envVars:
+      - key: MONGO_URI
+        value: mongodb+srv://aditijha7207:Aditi%23141@cluster0.vcnlhzx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - key: JWT_SECRET
+        value: BBD1EA9578BB9FB3F50D3F4945A1B82F200511191810D302CB633BAB214C9627
