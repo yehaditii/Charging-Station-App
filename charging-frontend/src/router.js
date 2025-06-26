@@ -7,7 +7,7 @@ import StationList from './views/StationList.vue'
 import AddStation from './views/AddStation.vue'
 import EditStation from './views/EditStation.vue'
 import StationDetails from './views/StationDetails.vue'
-import MapView from './views/MapView.vue'
+import MapView from './components/MapView.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
