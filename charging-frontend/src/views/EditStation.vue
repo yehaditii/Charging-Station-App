@@ -1,64 +1,44 @@
+<template>
+  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+      <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
+        ✏️ Edit Station
+      </h2>
+      <form @submit.prevent="saveChanges" class="space-y-4">
+        <input v-model="station.name" class="input" placeholder="Station Name" />
+        <input v-model.number="station.powerOutput" class="input" placeholder="Power Output (kW)" type="number" />
+        <input v-model="station.connectorType" class="input" placeholder="Connector Type" />
+        <button type="submit" class="btn w-full">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../api'
 import { useRoute, useRouter } from 'vue-router'
 
-const name = ref('')
-const latitude = ref('')
-const longitude = ref('')
-const connectorType = ref('')
-const powerOutput = ref('')
-const status = ref('Active')
-const message = ref('')
-
 const route = useRoute()
 const router = useRouter()
+const station = ref({})
 
 onMounted(async () => {
-  const res = await api.get(`/stations`)
-  const station = res.data.find(s => s._id === route.params.id)
-  name.value = station.name
-  latitude.value = station.location.latitude
-  longitude.value = station.location.longitude
-  connectorType.value = station.connectorType
-  powerOutput.value = station.powerOutput
-  status.value = station.status
+  const res = await api.get(`/stations/${route.params.id}`)
+  station.value = res.data
 })
 
-const updateStation = async () => {
-  try {
-    await api.put(`/stations/${route.params.id}`, {
-      name: name.value,
-      location: { latitude: parseFloat(latitude.value), longitude: parseFloat(longitude.value) },
-      connectorType: connectorType.value,
-      powerOutput: parseFloat(powerOutput.value),
-      status: status.value,
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      }
-    })
-    message.value = 'Updated!'
-    setTimeout(() => router.push('/stations'), 1000)
-  } catch (err) {
-    message.value = 'Error updating'
-  }
+const saveChanges = async () => {
+  await api.put(`/stations/${route.params.id}`, station.value)
+  router.push('/stations')
 }
 </script>
 
-<template>
-  <div>
-    <h2>Edit Station</h2>
-    <input v-model="name" placeholder="Name" />
-    <input v-model="latitude" placeholder="Latitude" />
-    <input v-model="longitude" placeholder="Longitude" />
-    <input v-model="connectorType" placeholder="Connector Type" />
-    <input v-model="powerOutput" placeholder="Power Output" />
-    <select v-model="status">
-      <option>Active</option>
-      <option>Inactive</option>
-    </select>
-    <button @click="updateStation">Update</button>
-    <p v-if="message">{{ message }}</p>
-  </div>
-</template>
+<style scoped>
+.input {
+  @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400;
+}
+.btn {
+  @apply bg-green-500 text-white py-2 rounded hover:bg-green-600;
+}
+</style>

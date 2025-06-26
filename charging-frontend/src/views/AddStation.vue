@@ -1,77 +1,48 @@
+<template>
+  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+      <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
+        ➕ Add Charging Station
+      </h2>
+      <form @submit.prevent="addStation" class="space-y-4">
+        <input v-model="station.name" class="input" placeholder="Station Name" required />
+        <input v-model.number="station.powerOutput" class="input" placeholder="Power Output (kW)" type="number" required />
+        <input v-model="station.connectorType" class="input" placeholder="Connector Type" required />
+        <input v-model.number="station.location.latitude" class="input" placeholder="Latitude" type="number" required />
+        <input v-model.number="station.location.longitude" class="input" placeholder="Longitude" type="number" required />
+        <button type="submit" class="btn w-full">Add Station</button>
+      </form>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref } from 'vue'
 import api from '../api'
 import { useRouter } from 'vue-router'
 
-const name = ref('')
-const latitude = ref('')
-const longitude = ref('')
-const connectorType = ref('')
-const powerOutput = ref('')
-const status = ref('Active')
-const message = ref('')
 const router = useRouter()
-
-const createStation = async () => {
-  try {
-    await api.post('/stations', {
-      name: name.value,
-      location: {
-        latitude: parseFloat(latitude.value),
-        longitude: parseFloat(longitude.value),
-      },
-      connectorType: connectorType.value,
-      powerOutput: parseFloat(powerOutput.value),
-      status: status.value,
-    })
-    message.value = 'Station added successfully!'
-    setTimeout(() => router.push('/stations'), 1000)
-  } catch (err) {
-    message.value = err.response?.data?.message || 'Error creating station'
+const station = ref({
+  name: '',
+  powerOutput: 0,
+  connectorType: '',
+  location: {
+    latitude: 0,
+    longitude: 0
   }
+})
+
+const addStation = async () => {
+  await api.post('/stations', station.value)
+  router.push('/stations')
 }
 </script>
 
-<template>
-  <div class="form-container">
-    <h2>Add Charging Station</h2>
-    <form @submit.prevent="createStation">
-      <input v-model="name" placeholder="Station Name" required />
-      <input v-model="latitude" placeholder="Latitude" required />
-      <input v-model="longitude" placeholder="Longitude" required />
-      <input v-model="connectorType" placeholder="Connector Type" required />
-      <input v-model="powerOutput" placeholder="Power Output (kW)" required />
-      <select v-model="status">
-        <option value="Active">Active</option>
-        <option value="Inactive">Inactive</option>
-      </select>
-      <button type="submit">Add Station</button>
-    </form>
-    <p v-if="message">{{ message }}</p>
-  </div>
-</template>
-
 <style scoped>
-.form-container {
-  max-width: 500px;
-  margin: 60px auto;
-  padding: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 12px;
+.input {
+  @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400;
 }
-input,
-select {
-  display: block;
-  margin: 1rem 0;
-  padding: 0.5rem;
-  width: 100%;
-}
-button {
-  padding: 0.5rem 1.5rem;
-  background-color: #42b883;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.btn {
+  @apply bg-green-500 text-white py-2 rounded hover:bg-green-600;
 }
 </style>
