@@ -3,8 +3,9 @@ services:
     name: charging-backend
     env: node
     plan: free
-    buildCommand: cd charging-backend && npm install
-    startCommand: cd charging-backend && node server.js
+    rootDir: charging-backend
+    buildCommand: npm install
+    startCommand: node server.js
     envVars:
       - key: MONGO_URI
         value: mongodb+srv://aditijha7207:Aditi%23141@cluster0.vcnlhzx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
