@@ -12,7 +12,10 @@ const app = express();
 app.use(express.json());
 
 // ✅ Allow only Vercel frontend to access backend
-const allowedOrigins = ['https://charging-station-app-jjoi.vercel.app'];
+const allowedOrigins = [
+  "https://charging-station-app-jjoi.vercel.app",
+  "https://charging-station-app-t5fv.vercel.app" // Add all your frontend URLs here
+];
 
 app.use(
   cors({
@@ -20,10 +23,10 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("CORS not allowed for this origin"));
+        callback(new Error("CORS not allowed for this origin: " + origin));
       }
     },
-    credentials: true, // only needed if sending cookies or auth headers
+    credentials: true, // Optional: only if using cookies or auth headers
   })
 );
 
@@ -31,7 +34,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/stations", stationRoutes);
 
-// DB connection
+// MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
